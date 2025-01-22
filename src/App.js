@@ -1,11 +1,10 @@
 
 import './App.css';
+import RootLayout from './components/RootLayout';
 
 function App() {
   return (
-    <div className="text-3xl font-bold">
-      Namaste, lets build NetflixGPT!
-    </div>
+    <RootLayout />
   );
 }
 
