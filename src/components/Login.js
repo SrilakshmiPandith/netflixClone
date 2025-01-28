@@ -1,73 +1,86 @@
 import React, { useState, useRef } from "react";
 import Header from "./Header";
 import { validateData } from "../utils/validation";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile   } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 import { auth } from "../utils/firebase";
-import { useNavigate } from "react-router-dom";
+import { PROFILEPIC } from "../utils/constants";
 import { useDispatch } from "react-redux";
-import {addUser} from "../utils/userSlice"
+import { addUser } from "../utils/userSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  
   const [isSignIn, setIsSignIn] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
   const nameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
 
-  function handleButtonClick(){
-    const message = validateData(emailRef.current.value, passwordRef.current.value);
+  function handleButtonClick() {
+    const message = validateData(
+      emailRef.current.value,
+      passwordRef.current.value
+    );
     setErrorMessage(message);
-    if(message){
+    if (message) {
       return;
     }
-    if(!isSignIn){
+    if (!isSignIn) {
       //sign up logic
-      createUserWithEmailAndPassword(auth, emailRef.current.value, passwordRef.current.value)
-  .then((userCredential) => {
-    // Signed up 
-    const user = userCredential.user;
-    console.log(user); 
-    updateProfile(user, {
-      displayName: nameRef.current.value, photoURL: "https://occ-0-2857-2164.1.nflxso.net/dnm/api/v6/vN7bi_My87NPKvsBoib006Llxzg/AAAABTZ2zlLdBVC05fsd2YQAR43J6vB1NAUBOOrxt7oaFATxMhtdzlNZ846H3D8TZzooe2-FT853YVYs8p001KVFYopWi4D4NXM.png?r=229"
-    }).then(() => {
-      const {uid, email, displayName, photoURL} = auth.currentUser;
-      dispatch(
-        addUser({
-          uid: uid,
-          email: email,
-          displayName: displayName,
-          photoURL: photoURL,
-        })
+      createUserWithEmailAndPassword(
+        auth,
+        emailRef.current.value,
+        passwordRef.current.value
       )
-      navigate("/browse")
-    }).catch((error) => {
-      // An error occurred
-      setErrorMessage(error.message)
-    });
-    
-    
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    setErrorMessage(errorCode+"-"+errorMessage);
-  });
-    }else{
+        .then((userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+          
+          updateProfile(user, {
+            displayName: nameRef.current.value,
+            photoURL: PROFILEPIC,
+          })
+            .then(() => {
+              const { uid, email, displayName, photoURL } = auth.currentUser;
+              dispatch(
+                addUser({
+                  uid: uid,
+                  email: email,
+                  displayName: displayName,
+                  photoURL: photoURL,
+                })
+              );
+            })
+            .catch((error) => {
+              // An error occurred
+              setErrorMessage(error.message);
+            });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + "-" + errorMessage);
+        });
+    } else {
       //sign in logic
-      signInWithEmailAndPassword(auth, emailRef.current.value, passwordRef.current.value)
-  .then((userCredential) => {
-    // Signed in 
-    const user = userCredential.user;
-    console.log(user);
-    navigate("/browse")
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    setErrorMessage(errorCode+"-"+errorMessage);
-  });
+      signInWithEmailAndPassword(
+        auth,
+        emailRef.current.value,
+        passwordRef.current.value
+      )
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + "-" + errorMessage);
+        });
     }
   }
   function toggleSignIn() {
@@ -94,7 +107,12 @@ const Login = () => {
           {isSignIn ? "Sign In" : "Sign Up"}
         </h1>
         {!isSignIn && (
-          <input ref={nameRef} type="text" placeholder="Full Name" className={inputClasses} />
+          <input
+            ref={nameRef}
+            type="text"
+            placeholder="Full Name"
+            className={inputClasses}
+          />
         )}
         <input
           ref={emailRef}
@@ -109,8 +127,11 @@ const Login = () => {
           className={inputClasses}
         />
         {errorMessage && <p>{errorMessage}</p>}
-        
-        <button className="p-4 my-6 bg-red-700 w-full" onClick={handleButtonClick}>
+
+        <button
+          className="p-4 my-6 bg-red-700 w-full"
+          onClick={handleButtonClick}
+        >
           {isSignIn ? "Sign In" : "Sign Up"}
         </button>
         <p className="py-4 cursor-pointer" onClick={toggleSignIn}>
