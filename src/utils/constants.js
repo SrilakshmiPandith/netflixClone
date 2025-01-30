@@ -9,3 +9,13 @@ export const API_OPTIONS = {
       Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiMjYwOGNlMmFmMWVjMzE2OGZiY2UyNmJhN2FmYmY0OSIsIm5iZiI6MTczNzczODE4My4wMTYsInN1YiI6IjY3OTNjN2M3YWNlM2VhYjgyZTE4NWQ5YiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.SXA_mYf8eZn1GlnfUuI9XOFLl0qSzeL72RbxiBtIQSQ'
     }
   };
+
+  export const IMG_CDN_URL = "https://image.tmdb.org/t/p/w500/"
+
+  export const BG_IMG = "https://assets.nflxext.com/ffe/siteui/vlv3/e3e9c31f-aa15-4a8f-8059-04f01e6b8629/web/IN-en-20250113-TRIFECTA-perspective_febfa442-23d9-45f3-937e-72f8b971f7a9_large.jpg";
+
+  export const SUPPORTED_LANGUAGES = [{identifier: "en", name: "English"},
+    {identifier: "hindi", name: "Hindi"},
+    {identifier: "spanish", name: "Spanish"},
+    {identifier: "kannada", name: "Kannada"},
+  ];
